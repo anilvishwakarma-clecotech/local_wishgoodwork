@@ -1,28 +1,117 @@
-export const loginData=[
-    {
-        label:'Email',
-        flag:'email',
-        secureTextEntry:false,
-        keyBoardType:'',
-        error:false,
-        errorText:'Please provide valid email address',
-        suffixIcon:false,
-        prefixIcon:false
-    },
-    {
-        label:'Password',
-        flag:'password',
-        secureTextEntry:false,
-        keyBoardType:'',
-        error:false,
-        errorText:'Password must be greater than 8 characters',
-        suffixIcon:false,
-        prefixIcon:true
-    }
-]
+export const loginData = [
+  {
+    label: 'Email',
+    flag: 'email',
+    secureTextEntry: false,
+    keyBoardType: '',
+    error: false,
+    errorText: 'Please provide valid email address',
+    suffixIcon: false,
+    prefixIcon: false,
+  },
+  {
+    label: 'Password',
+    flag: 'password',
+    secureTextEntry: false,
+    keyBoardType: '',
+    error: false,
+    errorText: 'Password must be greater than 8 characters',
+    suffixIcon: false,
+    prefixIcon: true,
+  },
+];
 
-export const registerData=[
+export const loginLinkData = [
+  {
+    text: '>  Forgot Yor Password?',
+  },
+  {
+    text: '>  Need assistance confirming your account?',
+  },
+  {
+    text: '>  Need assistance unlocking your account?',
+  },
+];
+
+export const registerData = [
     {
-        
-    }
-]
+        label: 'Organization',
+        flag: 'organization',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'Organization name is required',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'First Name',
+        flag: 'first name',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'First name is Required',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Last Name',
+        flag: 'last name',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'Last name is required',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Email',
+        flag: 'email',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'please provide valid email address',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Password',
+        flag: 'password',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'Password must be greater than 8 characters',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Confirm Password',
+        flag: 'confirm password',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'Password not matched!',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Employee id',
+        flag: 'employee id',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'please enter a valid employee id',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+    {
+        label: 'Designation',
+        flag: 'designation',
+        secureTextEntry: false,
+        keyBoardType: '',
+        error: false,
+        errorText: 'please enter your designation',
+        suffixIcon: false,
+        prefixIcon: false,
+      },
+];
