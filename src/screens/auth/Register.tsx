@@ -1,47 +1,50 @@
 import React from 'react';
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  ImageBackground,
   TouchableWithoutFeedback,
   Keyboard,
-  FlatList
+  FlatList,
 } from 'react-native';
 import {CustomImage, CustomText, CustomTextInput} from '../../components';
 import {images} from '../../utils/Iconasset';
 import {COLORS, w} from '../../utils/index';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
+import {LOGIN} from '../../utils/ScreenConstants';
+import {registerScreenText} from '../../utils/Apptext';
+import {registerData} from '../../utils/MockData';
 
-interface InputDataItem {
-  placeholder: string;
+interface RenderItemProps {
+  item: {
+    label: string;
+  };
 }
 
-const inputData:InputDataItem[] = [
-  {placeholder: 'Organization'},
-  {placeholder: 'First Name'},
-  {placeholder: 'Last Name'},
-  {placeholder: 'Email'},
-  {placeholder: 'Password'},
-  {placeholder: 'Confirm Password'},
-  {placeholder: 'Employee id'},
-  {placeholder: 'Designation'},
-];
+const renderItem = ({item}: RenderItemProps) => (
+  <CustomTextInput
+    placeholder={item.label}
+    style={styles.textInput}
+    suffixIcon={false}
+    prefixIcon={false}
+    onPrefixIconPress={undefined}
+    showPassword={false}
+    onSuffixIconPress={undefined}
+  />
+);
 
 const Register = () => {
-  const navigation = useNavigation();
-
-  const renderItem = ({ item }) => (
-    <CustomTextInput placeholder={item.placeholder} style={styles.textInput} />
-  );
+  interface navigateProp {
+    navigate: Function;
+  }
+  const navigation: navigateProp = useNavigation();
 
   return (
-    <ImageBackground style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         style={styles.innerContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -52,7 +55,10 @@ const Register = () => {
             contentContainerStyle={{justifyContent: 'center'}}
             showsVerticalScrollIndicator={false}>
             <View style={styles.headerContainer}>
-              <CustomText text={'Hello'} style={styles.helloText} />
+              <CustomText
+                text={registerScreenText.registerHead1}
+                style={styles.helloText}
+              />
               <CustomImage
                 source={images.WAVE}
                 resizeMode="contain"
@@ -61,32 +67,36 @@ const Register = () => {
               <CustomText text={','} style={styles.commaText} />
             </View>
             <View>
-              <CustomText text={'Welcome!'} style={styles.welcomeText} />
+              <CustomText
+                text={registerScreenText.registerHead2}
+                style={styles.welcomeText}
+              />
               <View style={styles.registerContainer}>
                 <CustomText
-                  text={'Already registered with us?'}
+                  text={registerScreenText.registerDesc1}
                   style={styles.registerText}
                 />
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Login')}
+                  onPress={() => navigation.navigate(LOGIN)}
                   style={styles.registerLink}>
-                  <Text style={styles.registerLinkText}>Login</Text>
+                  <CustomText
+                    style={styles.registerLinkText}
+                    text={registerScreenText.linkLogin}
+                  />
                 </TouchableOpacity>
               </View>
               <CustomText
-                text={'Register yourself to WishGoodWork!'}
+                text={registerScreenText.registerDescText2}
                 style={styles.descriptionText}
               />
             </View>
 
-            
-              <FlatList
-              data={inputData}
+            <FlatList
+              data={registerData}
               renderItem={renderItem}
-              keyExtractor={(item) => item.placeholder}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              keyExtractor={(item, index) => index?.toString()}
+              contentContainerStyle={{paddingBottom: 20}}
             />
-
 
             <View style={styles.buttonContainer}>
               <CustomButton
@@ -98,7 +108,7 @@ const Register = () => {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -128,6 +138,7 @@ const styles = StyleSheet.create({
   helloText: {
     fontWeight: '700',
     fontSize: 18,
+    color: COLORS.black,
   },
   waveImage: {
     width: 33,
@@ -139,10 +150,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: w(20),
     bottom: 5,
+    color: COLORS.black,
   },
   welcomeText: {
     fontWeight: '700',
     fontSize: 18,
+    color: COLORS.black,
   },
   registerContainer: {
     flexDirection: 'row',
@@ -154,223 +167,39 @@ const styles = StyleSheet.create({
   },
   registerLink: {
     position: 'absolute',
-    right: 100,
+    right: 116,
     bottom: 2,
   },
   registerLinkText: {
     textDecorationLine: 'underline',
-    color: 'blue',
+    color: COLORS.darkblue,
   },
   descriptionText: {
     fontSize: 14,
     marginVertical: 18,
   },
   textInput: {
-    borderColor: 'gray',
+    borderColor: COLORS.gray,
     width: '100%',
     borderWidth: 1,
     borderRadius: 5,
-    padding: 5,
-    marginTop: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    marginTop: 6,
   },
   buttonContainer: {
-    marginVertical: 12,
+    marginVertical: 10,
   },
   buttonStyle: {
-    backgroundColor: '#082755',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    backgroundColor: COLORS.darkblue,
+    borderRadius: 5,
+    paddingVertical: 6,
+    paddingHorizontal: 8,
   },
   textStyle: {
-    fontSize: 18,
-    color: '#fff',
+    fontSize: 14,
+    color: COLORS.white,
     fontWeight: 'bold',
     alignSelf: 'center',
   },
 });
-
-// import React from 'react';
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   StyleSheet,
-//   KeyboardAvoidingView,
-//   Platform,
-//   ScrollView,
-//   ImageBackground,
-//   TouchableWithoutFeedback,
-//   Keyboard,
-//   FlatList
-// } from 'react-native';
-// import { CustomImage, CustomText, CustomTextInput } from '../../components';
-// import { images } from '../../utils/Iconasset';
-// import { COLORS, w } from '../../utils/index';
-// import CustomButton from '../../components/CustomButton';
-// import { useNavigation } from '@react-navigation/native';
-// // import { FlatList } from 'native-base';
-
-// const inputData = [
-//   { placeholder: 'Organization', key: 'organization' },
-//   { placeholder: 'First Name', key: 'firstName' },
-//   { placeholder: 'Last Name', key: 'lastName' },
-//   { placeholder: 'Email', key: 'email' },
-//   { placeholder: 'Password', key: 'password' },
-//   { placeholder: 'Confirm Password', key: 'confirmPassword' },
-//   { placeholder: 'Employee id', key: 'employeeId' },
-//   { placeholder: 'Designation', key: 'designation' },
-// ];
-
-// const Register = () => {
-//   const navigation = useNavigation();
-
-//   const renderItem = ({ item }) => (
-//     <CustomTextInput placeholder={item.placeholder} style={styles.textInput} />
-//   );
-
-//   return (
-//     <ImageBackground style={styles.container}>
-//       <KeyboardAvoidingView
-//         style={styles.innerContainer}
-//         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-//         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-//           <ScrollView
-//             style={styles.inner}
-//             contentContainerStyle={{ justifyContent: 'center' }}
-//             showsVerticalScrollIndicator={false}>
-//             <View style={styles.headerContainer}>
-//               <CustomText text={'Hello'} style={styles.helloText} />
-//               <CustomImage
-//                 source={images.WAVE}
-//                 resizeMode="contain"
-//                 style={styles.waveImage}
-//               />
-//               <CustomText text={','} style={styles.commaText} />
-//             </View>
-//             <View>
-//               <CustomText text={'Welcome!'} style={styles.welcomeText} />
-//               <View style={styles.registerContainer}>
-//                 <CustomText
-//                   text={'Already registered with us?'}
-//                   style={styles.registerText}
-//                 />
-//                 <TouchableOpacity
-//                   onPress={() => navigation.navigate('Login')}
-//                   style={styles.registerLink}>
-//                   <Text style={styles.registerLinkText}>Login</Text>
-//                 </TouchableOpacity>
-//               </View>
-//               <CustomText
-//                 text={'Register yourself to WishGoodWork!'}
-//                 style={styles.descriptionText}
-//               />
-//             </View>
-//             <FlatList
-//               data={inputData}
-//               renderItem={renderItem}
-//               keyExtractor={(item) => item.key}
-//               contentContainerStyle={{ paddingBottom: 20 }}
-//             />
-//             <View style={styles.buttonContainer}>
-//               <CustomButton
-//                 text={'Register'}
-//                 buttonStyle={styles.buttonStyle}
-//                 textStyle={styles.textStyle}
-//               />
-//             </View>
-//           </ScrollView>
-//         </TouchableWithoutFeedback>
-//       </KeyboardAvoidingView>
-//     </ImageBackground>
-//   );
-// };
-
-// export default Register;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     backgroundColor: COLORS.darkblue,
-//   },
-//   innerContainer: {
-//     flex: 1,
-//     paddingHorizontal: 20,
-//     marginTop: 75,
-//     borderTopLeftRadius: 42,
-//     borderTopRightRadius: 42,
-//     backgroundColor: COLORS.white,
-//   },
-//   inner: {
-//     marginTop: 23,
-//   },
-//   headerContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   helloText: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//   },
-//   waveImage: {
-//     width: 33,
-//     height: 33,
-//   },
-//   commaText: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     position: 'absolute',
-//     left: w(20),
-//     bottom: 5,
-//   },
-//   welcomeText: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//   },
-//   registerContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginTop: 14,
-//   },
-//   registerText: {
-//     fontSize: 14,
-//   },
-//   registerLink: {
-//     position: 'absolute',
-//     right: 100,
-//     bottom: 2,
-//   },
-//   registerLinkText: {
-//     textDecorationLine: 'underline',
-//     color: 'blue',
-//   },
-//   descriptionText: {
-//     fontSize: 14,
-//     marginVertical: 18,
-//   },
-//   textInput: {
-//     borderColor: 'gray',
-//     width: '100%',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     padding: 5,
-//     marginTop: 4,
-//   },
-//   buttonContainer: {
-//     marginVertical: 12,
-//   },
-//   buttonStyle: {
-//     backgroundColor: '#082755',
-//     borderRadius: 10,
-//     paddingVertical: 8,
-//     paddingHorizontal: 12,
-//   },
-//   textStyle: {
-//     fontSize: 18,
-//     color: '#fff',
-//     fontWeight: 'bold',
-//     alignSelf: 'center',
-//   },
-// });
-

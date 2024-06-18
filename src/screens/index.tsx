@@ -1,2 +1,3 @@
 import Login from "./auth/Login"
-export {Login}
+import Register from "./auth/Register"
+export {Login, Register}
