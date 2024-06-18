@@ -49,12 +49,20 @@ const Register = () => {
         style={styles.innerContainer}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          {/* <FlatList data={''} renderItem={()=>{}} keyExtractor={(item,index)=>item?.id||index?.toString()}/> */}
-          <ScrollView
+          <View
             style={styles.inner}
-            contentContainerStyle={{justifyContent: 'center'}}
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.headerContainer}>
+           >
+            
+
+            <FlatList
+              data={registerData}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index?.toString()}
+              showsVerticalScrollIndicator={false}
+              ListHeaderComponent={()=>{
+                return(
+                  <>
+                  <View style={styles.headerContainer}>
               <CustomText
                 text={registerScreenText.registerHead1}
                 style={styles.helloText}
@@ -90,22 +98,26 @@ const Register = () => {
                 style={styles.descriptionText}
               />
             </View>
-
-            <FlatList
-              data={registerData}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index?.toString()}
+                  </>
+                )
+              }}
+              ListFooterComponent={()=>{
+                return(
+                  <View style={styles.buttonContainer}>
+                  <CustomButton
+                    text={'Register'}
+                    buttonStyle={styles.buttonStyle}
+                    textStyle={styles.textStyle}
+                  />
+                </View>
+                )
+              }}
               contentContainerStyle={{paddingBottom: 20}}
+
             />
 
-            <View style={styles.buttonContainer}>
-              <CustomButton
-                text={'Register'}
-                buttonStyle={styles.buttonStyle}
-                textStyle={styles.textStyle}
-              />
-            </View>
-          </ScrollView>
+         
+          </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </View>
@@ -130,6 +142,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginTop: 23,
+    justifyContent: 'center'
   },
   headerContainer: {
     flexDirection: 'row',
