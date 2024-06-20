@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -9,82 +9,163 @@ import {
   Keyboard,
   FlatList,
   ListRenderItemInfo,
+  Alert,
 } from 'react-native';
-import { CustomImage, CustomText, CustomTextInput } from '../../components';
-import { images } from '../../utils/Iconasset';
-import { COLORS, w } from '../../utils/index';
+import {
+  CustomImage,
+  CustomText,
+  CustomTextInput,
+  DropDownComponent,
+} from '../../components';
+import {images} from '../../utils/Iconasset';
+import {COLORS, w} from '../../utils/index';
 import CustomButton from '../../components/CustomButton';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { LOGIN } from '../../utils/ScreenConstants';
-import { registerScreenText } from '../../utils/Apptext';
-import { useAppDispatch, useAppSelector } from '../../redux-data/hooks';
-import { onRegisterStateChange } from '../../redux-data/registerSlice';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {LOGIN} from '../../utils/ScreenConstants';
+import {registerScreenText} from '../../utils/Apptext';
+import {useAppDispatch, useAppSelector} from '../../redux-data/hooks';
+import {
+  onGetError,
+  onRegisterStateChange,
+  onReset,
+} from '../../redux-data/registerSlice';
+import {emailValidation} from '../../utils/Validations';
+
 interface FormField {
+  error: any;
+  errorText: string;
   label: string;
   flag: string;
   prefixIcon: boolean | string;
   secureTextEntry: boolean;
-  dropdownItem: string[] | null;
+  dropdownItem: string[] | any;
   value: string;
 }
+
 const Register = () => {
-  const { formFields } = useAppSelector(state => state.register);
+  const {formFields} = useAppSelector(state => state.register);
+
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<any>>();
   const [showPassword, setShowPassword] = useState(false);
   const [showDropDown, setShowDropdown] = useState(false);
-  const renderItem = ({ item }: ListRenderItemInfo<FormField>) => {
+  const [dropDownText, setDropDownText] = useState(
+    'Please select organisation from list',
+  );
+  const onRegister = (formFields: any) => {
+    let verified = true;
+    formFields.forEach((ele: any) => {
+      if (ele.flag === 'organization' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'firstName' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'lastName' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'email' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'password' && ele.value.length < 8) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'confirmPassword' && ele.value.length < 8) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'employeeId' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      } else if (ele.flag == 'designation' && ele.value.length == 0) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+      }
+    });
+  };
+
+  const renderItem = ({item}: ListRenderItemInfo<FormField>) => {
+
     return (
       <>
-        <CustomTextInput
-          placeholder={item.label}
-          secureTextEntry={item.secureTextEntry}
-          onChangeText={(val: string) =>
-            dispatch(onRegisterStateChange({ flag: item.flag, value: val }))
-          }
-          value={item.value}
-          style={styles.textInput}
-          suffixIcon={false}
-          prefixIconStyle={{
-            transform: [{ rotate: showDropDown ? '180deg' : '0deg' }],
-          }}
-          suffixIconStyle={null}
-          prefixIcon={item.prefixIcon}
-          onSuffixIconPress={() => {}}
-          onPrefixIconPress={() =>
-            item.flag === 'organization'
-              ? setShowDropdown(!showDropDown)
-              : setShowPassword(!showPassword)
-          }
-          showPassword={showPassword}
-          showDropdown={showDropDown}
-        />
-        {showDropDown && item.dropdownItem && (
-          <View
-            style={{
-              borderWidth:1,
-              borderBottomLeftRadius: 16,
-              borderBottomRightRadius: 16,
-            }}>
-            {item.dropdownItem.map((entry, index) => (
-              <TouchableOpacity
-                style={{ margin: 10 }}
-                key={index}
-                onPress={() => {
-                  dispatch(onRegisterStateChange({ flag: item.flag, value: entry }));
-                  setShowDropdown(false);
-                }}>
-                <CustomText text={entry} style={{ fontSize: 15 }} />
-                <View
-                  style={{
-                    borderWidth: 0.5,
-                    borderColor: 'grey',
-                    marginTop: 2,
-                  }}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
+        {item.flag === 'organization' ? (
+          <DropDownComponent
+            data={item?.dropdownItem}
+            showDropDown={showDropDown}
+            dropDownText={dropDownText}
+            onchangeText={(val: string) => {
+              setDropDownText(val);
+              setShowDropdown(!showDropDown);
+            }}
+            onPress={() => {
+              setShowDropdown(!showDropDown);
+            }}
+          />
+        ) : (
+          <CustomTextInput
+            placeholder={item.label}
+            secureTextEntry={item.secureTextEntry}
+            onChangeText={val =>
+              dispatch(
+                onRegisterStateChange({
+                  flag: item.flag,
+                  value: val,
+                  error: false,
+                }),
+              )
+            }
+            value={item.value}
+            style={styles.textInput}
+            suffixIcon={false}
+            prefixIconStyle={{
+              transform: [{rotate: showDropDown ? '180deg' : '0deg'}],
+            }}
+            suffixIconStyle={null}
+            prefixIcon={item.prefixIcon}
+            onSuffixIconPress={() => {}}
+            onPrefixIconPress={() =>
+              item.flag === 'organization'
+                ? setShowDropdown(!showDropDown)
+                : setShowPassword(!showPassword)
+            }
+            showPassword={showPassword}
+            showDropdown={showDropDown}
+          />
+        )}
+
+        {item?.error && (
+          <CustomText text={item?.errorText} style={{color: 'red'}} />
         )}
       </>
     );
@@ -147,10 +228,11 @@ const Register = () => {
                     text={'Register'}
                     buttonStyle={styles.buttonStyle}
                     textStyle={styles.textStyle}
+                    onPress={() => onRegister(formFields)}
                   />
                 </View>
               )}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{paddingBottom: 20}}
             />
           </View>
         </TouchableWithoutFeedback>

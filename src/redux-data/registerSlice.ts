@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {images} from '../utils/Iconasset';
+
+
 interface FormField {
   label: string;
   flag: string;
@@ -12,9 +14,11 @@ interface FormField {
   prefixIcon: boolean | string;
   value: string;
 }
+
 interface RegisterState {
   formFields: FormField[];
 }
+
 const initialState: RegisterState = {
   formFields: [
     {
@@ -125,26 +129,37 @@ const initialState: RegisterState = {
 interface FormFieldPayload {
   flag: string;
   value: string;
+  error: boolean;
+}
+interface FormFieldErrorPayload {
+  flag: string;
+  error: boolean;
 }
 
 export const registerSlice = createSlice({
   name: 'register',
   initialState,
   reducers: {
+    onReset: () => initialState,
     onRegisterStateChange: (state, action: PayloadAction<FormFieldPayload>) => {
-      // state.formFields.forEach((item, index) => {
-      //   console.log(action.payload, 'action.payload');
-
-      //   if (item.flag === action.payload?.flag) {
-      //     item.value = action.payload.value;
-      //   }
-      // });
-      const field = state.formFields.find((item) => item.flag === action.payload.flag);
+      const field = state.formFields.find(
+        item => item.flag === action.payload.flag,
+      );
       if (field) {
         field.value = action.payload.value;
+        field.error = action.payload.error;
+      }
+    },
+    onGetError: (state, action: PayloadAction<FormFieldErrorPayload>) => {
+      
+      const field = state.formFields.find(
+        item => item.flag === action.payload.flag,
+      );
+      if (field) {
+        field.error = action.payload.error;
       }
     },
   },
 });
-export const {onRegisterStateChange} = registerSlice.actions;
+export const {onRegisterStateChange, onGetError, onReset} = registerSlice.actions;
 export default registerSlice.reducer;
