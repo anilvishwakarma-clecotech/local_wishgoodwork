@@ -73,9 +73,7 @@ const Login = () => {
               />
             </View>
             {loginData.map((inputData, index) => (
-              <View
-                key={index.toString()}
-                style={styles.textInputContainer}>
+              <View key={index.toString()} style={styles.textInputContainer}>
                 <CustomTextInput
                   placeholder={inputData.label}
                   style={styles.textInput}
@@ -84,6 +82,8 @@ const Login = () => {
                   onSuffixIconPress={() => {}}
                   onPrefixIconPress={() => setShowPassword(!showPassword)}
                   showPassword={showPassword}
+                  secureTextEntry={inputData.secureTextEntry}
+                  showDropdown={false}
                 />
               </View>
             ))}
@@ -96,12 +96,12 @@ const Login = () => {
             </View>
           </View>
         </TouchableWithoutFeedback>
-        <View style={{marginTop:20}}>
-        {loginLinkData.map((item, index) => (
-          <TouchableOpacity key={index.toString()}>
-            <CustomText style={styles.bottomLinks} text={item.text} />
-          </TouchableOpacity>
-        ))}
+        <View style={{marginTop: 20}}>
+          {loginLinkData.map((item, index) => (
+            <TouchableOpacity key={index.toString()}>
+              <CustomText style={styles.bottomLinks} text={item.text} />
+            </TouchableOpacity>
+          ))}
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -178,6 +178,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 18,
   },
+  textInputContainer: {
+    marginTop: 20,
+  },
   textInput: {
     borderColor: COLORS.gray,
     width: '100%',
@@ -203,9 +206,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.darkblue,
     marginTop: 5,
-  },textInputContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-  }
+  },
 });
