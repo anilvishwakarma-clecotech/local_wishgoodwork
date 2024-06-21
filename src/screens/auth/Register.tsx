@@ -29,7 +29,7 @@ import {
   onRegisterStateChange,
   onReset,
 } from '../../redux-data/registerSlice';
-import {emailValidation} from '../../utils/Validations';
+import { emailValidation } from '../../utils/Validations';
 
 interface FormField {
   error: any;
@@ -37,6 +37,7 @@ interface FormField {
   label: string;
   flag: string;
   prefixIcon: boolean | string;
+  suffixIcon: boolean | string;
   secureTextEntry: boolean;
   dropdownItem: string[] | any;
   value: string;
@@ -48,13 +49,31 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NavigationProp<any>>();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showDropDown, setShowDropdown] = useState(false);
   const [dropDownText, setDropDownText] = useState(
     'Please select organisation from list',
   );
+
   const onRegister = (formFields: any) => {
+
+
+    function matchPasswords() {
+      const password = formFields.find((field: { flag: string; }) => field.flag === 'password');
+      const confirmPassword = formFields.find((field: { flag: string; }) => field.flag === 'confirmPassword');
+      if (password.value !== confirmPassword.value) {
+        return false;
+      }
+      return true;
+    }
+
+    console.log("match Password",matchPasswords());
+
     let verified = true;
     formFields.forEach((ele: any) => {
+
+      // console.log(ele.value,"formfields")
+
       if (ele.flag === 'organization' && ele.value.length == 0) {
         dispatch(
           onGetError({
@@ -62,6 +81,7 @@ const Register = () => {
             error: true,
           }),
         );
+        verified = false;
       } else if (ele.flag == 'firstName' && ele.value.length == 0) {
         dispatch(
           onGetError({
@@ -69,6 +89,7 @@ const Register = () => {
             error: true,
           }),
         );
+        verified = false;
       } else if (ele.flag == 'lastName' && ele.value.length == 0) {
         dispatch(
           onGetError({
@@ -76,13 +97,16 @@ const Register = () => {
             error: true,
           }),
         );
-      } else if (ele.flag == 'email' && ele.value.length == 0) {
+        verified = false;
+      } else if (ele.flag == 'email' && !emailValidation(ele.value)) {
+        console.log("email validate",emailValidation(ele.value))
         dispatch(
           onGetError({
             flag: ele.flag,
             error: true,
           }),
         );
+        verified = false;
       } else if (ele.flag == 'password' && ele.value.length < 8) {
         dispatch(
           onGetError({
@@ -90,13 +114,15 @@ const Register = () => {
             error: true,
           }),
         );
-      } else if (ele.flag == 'confirmPassword' && ele.value.length < 8) {
+        verified = false;
+      } else if (ele.flag == 'confirmPassword' && ele.value.length < 8 && !matchPasswords()) {
         dispatch(
           onGetError({
             flag: ele.flag,
             error: true,
           }),
         );
+        verified = false;
       } else if (ele.flag == 'employeeId' && ele.value.length == 0) {
         dispatch(
           onGetError({
@@ -104,6 +130,7 @@ const Register = () => {
             error: true,
           }),
         );
+        verified = false;
       } else if (ele.flag == 'designation' && ele.value.length == 0) {
         dispatch(
           onGetError({
@@ -111,12 +138,16 @@ const Register = () => {
             error: true,
           }),
         );
+        verified = false;
       }
     });
+    if (verified) {
+      Alert.alert('ready for submit');
+      dispatch(onReset());
+    }
   };
 
   const renderItem = ({item}: ListRenderItemInfo<FormField>) => {
-
     return (
       <>
         {item.flag === 'organization' ? (
@@ -124,8 +155,18 @@ const Register = () => {
             data={item?.dropdownItem}
             showDropDown={showDropDown}
             dropDownText={dropDownText}
+            prefixIconStyle={{
+              transform: [{rotate: showDropDown ? '180deg' : '0deg'}],
+            }}
             onchangeText={(val: string) => {
               setDropDownText(val);
+              dispatch(
+                onRegisterStateChange({
+                  flag: item.flag,
+                  value: val,
+                  error: false,
+                }),
+              );
               setShowDropdown(!showDropDown);
             }}
             onPress={() => {
@@ -135,7 +176,10 @@ const Register = () => {
         ) : (
           <CustomTextInput
             placeholder={item.label}
-            secureTextEntry={item.secureTextEntry}
+            secureTextEntry={
+              (item.flag === 'password' && !showPassword) ||
+              (item.flag === 'confirmPassword' && !showConfirmPassword)
+            }
             onChangeText={val =>
               dispatch(
                 onRegisterStateChange({
@@ -147,20 +191,21 @@ const Register = () => {
             }
             value={item.value}
             style={styles.textInput}
-            suffixIcon={false}
-            prefixIconStyle={{
-              transform: [{rotate: showDropDown ? '180deg' : '0deg'}],
-            }}
+            suffixIcon={item.suffixIcon}
+            prefixIconStyle={null}
             suffixIconStyle={null}
             prefixIcon={item.prefixIcon}
             onSuffixIconPress={() => {}}
-            onPrefixIconPress={() =>
-              item.flag === 'organization'
-                ? setShowDropdown(!showDropDown)
-                : setShowPassword(!showPassword)
-            }
+            onPrefixIconPress={() => {
+              if (item.flag === 'password') {
+                setShowPassword(!showPassword);
+              } else if (item.flag === 'confirmPassword') {
+                setShowConfirmPassword(!showConfirmPassword);
+              }
+            }}
             showPassword={showPassword}
             showDropdown={showDropDown}
+            showConfirmPassword={showConfirmPassword}
           />
         )}
 

@@ -10,6 +10,7 @@ interface CustomTextProps {
   prefixIcon: any;
   onPrefixIconPress: () => void;
   showPassword: boolean;
+  showConfirmPassword:boolean;
   onSuffixIconPress: () => void;
   secureTextEntry: boolean;
   showDropdown: boolean;
@@ -33,8 +34,8 @@ const CustomTextInput = (props: CustomTextProps) => {
     onChangeText,
     prefixIconStyle,
     suffixIconStyle,
+    showConfirmPassword,
   } = props;
-
 
   return (
     <View
@@ -66,7 +67,11 @@ const CustomTextInput = (props: CustomTextProps) => {
           onPress={onPrefixIconPress}
           hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}>
           <CustomImage
-            source={prefixIcon}
+            source={(placeholder === 'Password' && showPassword) 
+              ? images.HIDDEN 
+              : (placeholder === 'Confirm Password' && showConfirmPassword) 
+                  ? images.HIDDEN 
+                  : prefixIcon}
             resizeMode="contain"
             style={[prefixIconStyle, {width: 25, height: 25, right: 35}]}
           />

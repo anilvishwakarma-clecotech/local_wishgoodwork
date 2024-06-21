@@ -84,7 +84,7 @@ const initialState: RegisterState = {
       error: false,
       errorText: 'Password must be greater than 8 characters',
       suffixIcon: false,
-      prefixIcon: images?.EYE || false,
+      prefixIcon: images.EYE,
       value: '',
     },
     {
@@ -96,7 +96,7 @@ const initialState: RegisterState = {
       error: false,
       errorText: 'Password not matched!',
       suffixIcon: false,
-      prefixIcon: images?.EYE || false,
+      prefixIcon: images.EYE,
       value: '',
     },
     {
@@ -151,7 +151,6 @@ export const registerSlice = createSlice({
       }
     },
     onGetError: (state, action: PayloadAction<FormFieldErrorPayload>) => {
-      
       const field = state.formFields.find(
         item => item.flag === action.payload.flag,
       );
