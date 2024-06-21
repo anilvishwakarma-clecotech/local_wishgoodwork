@@ -23,7 +23,7 @@ import {REGISTER} from '../../utils/ScreenConstants';
 import {useAppDispatch, useAppSelector} from '../../redux-data/hooks';
 import {
   onLoginStateChange,
-  onReset,
+  onLoginReset,
   onGetError,
 } from '../../redux-data/loginSlice';
 import {emailValidation} from '../../utils/Validations';
@@ -64,7 +64,7 @@ const Login = () => {
 
     if (verified) {
       Alert.alert('ready for login');
-      dispatch(onReset());
+      dispatch(onLoginReset());
     }
   };
 
@@ -161,7 +161,7 @@ const Login = () => {
         </TouchableWithoutFeedback>
         <View style={{marginTop: 20}}>
           {loginLinkData.map((item, index) => (
-            <TouchableOpacity key={index.toString()}>
+            <TouchableOpacity key={index.toString()} onPress={()=>navigation.navigate(item.link)}>
               <CustomText style={styles.bottomLinks} text={item.text} />
             </TouchableOpacity>
           ))}
