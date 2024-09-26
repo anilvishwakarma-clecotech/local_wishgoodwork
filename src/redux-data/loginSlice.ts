@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from './store';
 import { images } from '../utils/Iconasset';
 
 interface LoginFields {
@@ -51,11 +50,11 @@ const initialState: LoginState = {
     },
     {
       text: '> Need assistance confirming your account?',
-      link: 'ForgotPassword'
+      link: 'ConfirmAccount'
     },
     {
       text: '> Need assistance unlocking your account?',
-      link: 'ForgotPassword'
+      link: 'UnlockAccount'
     },
   ],
 };

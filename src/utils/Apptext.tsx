@@ -22,3 +22,19 @@ export const forgotPasswordScreenText = {
   bottomdescText:'Would you like to log in?',
   loginLinkText:'Login'
 }
+
+export const confirmAccountText = {
+  head1:'Oops',
+  head2:'Want to Confirm Account?',
+  descText:'Please provide your email address to receive a One-Time Password (OTP) for confirming your account.',
+  bottomdescText:'Would you like to log in?',
+  loginLinkText:'Login'
+}
+
+export const unlockAccountText = {
+  head1:'Oops',
+  head2:'Account Locked?',
+  descText:'Please provide your email address to receive a One-Time Password (OTP) for unlocking your account.',
+   bottomdescText:'Would you like to log in?',
+  loginLinkText:'Login'
+}

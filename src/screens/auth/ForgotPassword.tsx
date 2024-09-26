@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import {
   CustomImage,
@@ -21,16 +22,29 @@ import {forgotPasswordScreenText} from '../../utils/Apptext';
 import {LOGIN} from '../../utils/ScreenConstants';
 import {useAppDispatch, useAppSelector} from '../../redux-data/hooks';
 import {onLoginReset} from '../../redux-data/loginSlice';
+import { emailValidation } from '../../utils/Validations';
 
 const ForgotPassword = () => {
+
   interface navigateProp {
     navigate: Function;
   }
-  const {loginFields, loginLinkData} = useAppSelector(state => state.login);
-
   const dispatch = useAppDispatch();
   const navigation: navigateProp = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [showError, setShowError]=useState(false);
+
+  const onSendLink=()=>{
+    if(!emailValidation(email)){
+      setShowError(true);
+    }
+    else{
+      Alert.alert("link sent successfully")
+      setEmail('')
+      setShowError(false)
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -75,12 +89,13 @@ const ForgotPassword = () => {
                   showPassword={showPassword}
                   secureTextEntry={false}
                   showDropdown={false}
-                  onChangeText={() => {}}
-                  value={''}
+                  onChangeText={(e) => setEmail(e)}
+                  value={email}
                   showConfirmPassword={false}
                   prefixIconStyle={null}
                   suffixIconStyle={null}
                 />
+                {showError && <CustomText text='please provide valid email address' style={{color:'red'}}/>}
               </View>
             </>
             <View style={styles.buttonContainer}>
@@ -88,10 +103,10 @@ const ForgotPassword = () => {
                 text={'Send Reset Link'}
                 buttonStyle={styles.buttonStyle}
                 textStyle={styles.textStyle}
-                onPress={() => {}}
+                onPress={onSendLink}
               />
             </View>
-            <View style={styles.descContainer}>
+            <View style={{...styles.descContainer, justifyContent: 'center',}}>
               <CustomText
                 text={forgotPasswordScreenText.bottomdescText}
                 style={styles.descTextSize}
@@ -152,7 +167,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 27,
     position: 'absolute',
-    left: w(18),
+    left: w(17),
     bottom: 5,
     color: COLORS.black,
   },
@@ -165,7 +180,6 @@ const styles = StyleSheet.create({
   descContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     marginTop: 10,
   },
   descTextSize: {

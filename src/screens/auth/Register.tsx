@@ -208,7 +208,6 @@ const Register = () => {
             showConfirmPassword={showConfirmPassword}
           />
         )}
-
         {item?.error && (
           <CustomText text={item?.errorText} style={{color: 'red'}} />
         )}
