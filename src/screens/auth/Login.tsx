@@ -7,7 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  ImageBackground,
+  Alert,
 } from 'react-native';
 import {
   CustomImage,
@@ -20,14 +20,53 @@ import {w, COLORS} from '../../utils/index';
 import {useNavigation} from '@react-navigation/native';
 import {loginScreenText} from '../../utils/Apptext';
 import {REGISTER} from '../../utils/ScreenConstants';
-import {loginData, loginLinkData} from '../../utils/MockData';
+import {useAppDispatch, useAppSelector} from '../../redux-data/hooks';
+import {
+  onLoginStateChange,
+  onLoginReset,
+  onGetError,
+} from '../../redux-data/loginSlice';
+import {emailValidation} from '../../utils/Validations';
+
 const Login = () => {
   interface navigateProp {
     navigate: Function;
   }
+  const {loginFields,loginLinkData} = useAppSelector(state => state.login);
 
+  const dispatch = useAppDispatch();
   const navigation: navigateProp = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
+
+  const onLogin = (loginFields: any) => {
+    let verified = true;
+    loginFields.forEach((ele: any) => {
+      // console.log(ele.value, 'loginFields');
+
+      if (ele.flag == 'email' && !emailValidation(ele.value)) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+        verified = false;
+      } else if (ele.flag == 'password' && ele.value.length < 8) {
+        dispatch(
+          onGetError({
+            flag: ele.flag,
+            error: true,
+          }),
+        );
+        verified = false;
+      }
+    });
+
+    if (verified) {
+      Alert.alert('ready for login');
+      dispatch(onLoginReset());
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -72,36 +111,60 @@ const Login = () => {
                 style={styles.descriptionText}
               />
             </View>
-            {loginData.map((inputData, index) => (
-              <View
-                key={index.toString()}
-                style={styles.textInputContainer}>
-                <CustomTextInput
-                  placeholder={inputData.label}
-                  style={styles.textInput}
-                  suffixIcon={inputData.suffixIcon}
-                  prefixIcon={inputData.prefixIcon}
-                  onSuffixIconPress={() => {}}
-                  onPrefixIconPress={() => setShowPassword(!showPassword)}
-                  showPassword={showPassword}
-                />
-              </View>
+            {loginFields.map((inputData, index) => (
+              <>
+                <View key={index.toString()} style={styles.textInputContainer}>
+                  <CustomTextInput
+                    placeholder={inputData.label}
+                    style={styles.textInput}
+                    suffixIcon={inputData.suffixIcon}
+                    prefixIcon={inputData.prefixIcon}
+                    onSuffixIconPress={() => {}}
+                    onPrefixIconPress={() => setShowPassword(!showPassword)}
+                    showPassword={showPassword}
+                    secureTextEntry={
+                      inputData.flag === 'password' && !showPassword
+                    }
+                    showDropdown={false}
+                    onChangeText={(val: string) => {
+                      dispatch(
+                        onLoginStateChange({
+                          flag: inputData.flag,
+                          value: val,
+                          error: false,
+                        }),
+                      );
+                    }}
+                    value={inputData.value}
+                    showConfirmPassword={false}
+                    prefixIconStyle={null}
+                    suffixIconStyle={null}
+                  />
+                </View>
+                {inputData?.error && (
+                  <CustomText
+                    text={inputData?.errorText}
+                    style={{color: 'red'}}
+                  />
+                )}
+              </>
             ))}
             <View style={styles.buttonContainer}>
               <CustomButton
                 text={'Login'}
                 buttonStyle={styles.buttonStyle}
                 textStyle={styles.textStyle}
+                onPress={() => onLogin(loginFields)}
               />
             </View>
           </View>
         </TouchableWithoutFeedback>
-        <View style={{marginTop:20}}>
-        {loginLinkData.map((item, index) => (
-          <TouchableOpacity key={index.toString()}>
-            <CustomText style={styles.bottomLinks} text={item.text} />
-          </TouchableOpacity>
-        ))}
+        <View style={{marginTop: 20}}>
+          {loginLinkData.map((item, index) => (
+            <TouchableOpacity key={index.toString()} onPress={()=>navigation.navigate(item.link)}>
+              <CustomText style={styles.bottomLinks} text={item.text} />
+            </TouchableOpacity>
+          ))}
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -178,6 +241,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 18,
   },
+  textInputContainer: {
+    marginTop: 20,
+  },
   textInput: {
     borderColor: COLORS.gray,
     width: '100%',
@@ -203,9 +269,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.darkblue,
     marginTop: 5,
-  },textInputContainer:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-  }
+  },
 });

@@ -1,21 +1,23 @@
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  TextStyle,
-  TouchableOpacity,
-} from 'react-native';
+import {ImageStyle, StyleProp, TextInput, TextStyle, TouchableOpacity, View} from 'react-native';
 import CustomImage from './CustomImage';
 import {images} from '../utils/Iconasset';
 
 interface CustomTextProps {
-  style: TextStyle;
+  style: StyleProp<TextStyle>;
   placeholder: string;
-  suffixIcon: boolean;
-  prefixIcon: boolean;
-  onPrefixIconPress: any;
+  suffixIcon: any;
+  prefixIcon: any;
+  onPrefixIconPress: () => void;
   showPassword: boolean;
-  onSuffixIconPress: any;
+  showConfirmPassword:boolean;
+  onSuffixIconPress: () => void;
+  secureTextEntry: boolean;
+  showDropdown: boolean;
+  onChangeText: (text: string) => void;
+  value: string;
+  prefixIconStyle: StyleProp<ImageStyle>;
+  suffixIconStyle: StyleProp<ImageStyle>;
 }
 
 const CustomTextInput = (props: CustomTextProps) => {
@@ -27,32 +29,55 @@ const CustomTextInput = (props: CustomTextProps) => {
     onPrefixIconPress,
     onSuffixIconPress,
     showPassword,
+    secureTextEntry,
+    value,
+    onChangeText,
+    prefixIconStyle,
+    suffixIconStyle,
+    showConfirmPassword,
   } = props;
 
-  // console.log(showPassword,'showPasswordshowPasswordshowPassword');
-
   return (
-    <>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
       {suffixIcon && (
-        <TouchableOpacity onPress={onSuffixIconPress}>
+        <TouchableOpacity
+          onPress={onSuffixIconPress}
+          hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}>
           <CustomImage
             source={showPassword ? images.HIDDEN : images.EYE}
             resizeMode="contain"
-            style={{width: 30, height: 30, right: 40}}
+            style={[suffixIconStyle, {width: 30, height: 30, right: 40}]}
           />
         </TouchableOpacity>
       )}
-      <TextInput placeholder={placeholder} style={style} />
+      <TextInput
+        placeholder={placeholder}
+        style={style}
+        secureTextEntry={secureTextEntry}
+        value={value}
+        onChangeText={onChangeText}
+      />
       {prefixIcon && (
-        <TouchableOpacity onPress={onPrefixIconPress}>
+        <TouchableOpacity
+          onPress={onPrefixIconPress}
+          hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}>
           <CustomImage
-            source={showPassword ? images.HIDDEN : images.EYE}
+            source={(placeholder === 'Password' && showPassword) 
+              ? images.HIDDEN 
+              : (placeholder === 'Confirm Password' && showConfirmPassword) 
+                  ? images.HIDDEN 
+                  : prefixIcon}
             resizeMode="contain"
-            style={{width: 30, height: 30, right: 40}}
+            style={[prefixIconStyle, {width: 25, height: 25, right: 35}]}
           />
         </TouchableOpacity>
       )}
-    </>
+    </View>
   );
 };
 
